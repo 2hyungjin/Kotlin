@@ -1,8 +1,10 @@
+
+
 # Kotlin
 
-코틀린에 대한 이해가 부족하고 더 **코틀린 다운 코드**를 짜고 싶어서 코틀린 컴파일러 개발자가 쓴  **"Kotlin In Action"** 책을 읽게 되었다.
+코틀린에 대한 이해가 부족하고 더 **코틀린 다운 코드**를 짜고 싶어서 코틀린 컴파일러 개발자가 쓴  **"Kotlin In Action"** 책을 읽게 되었습니다.
 
-밑의 내용은 이 책을 읽고 내가 이해하며 정리한 내용이며 더 자세한 내용은 책을 구입해 읽어보길 바란다.
+밑의 내용은 이 책을 읽고 내가 이해하며 정리한 내용이며 더 자세한 내용은 책을 구입하여 읽어보시길 바랍니다.
 
 - 코틀린은 **간결하고 실용적**이며 **자바 코드와의 상호운용성**을 중시한다.
 - 코틀린은 **정적 타입 지정 언어**이다. 정적 타입 지정 언어의 장점은 다음과 같다.
@@ -191,8 +193,153 @@ class Person(val age: Int) {
 
 Person 인스턴스가 availabilityOfDriving의 값을 읽으려하면 age에 따라 boolean값을 자동으로 반환한다.
 
+### 디렉터리와 패키지
 
+같은 패키지에 속해 있다면 다른 파일에서 정의한 선언일지라도 직접 사용할 수 있다.
+
+다른 패키지에 정의한 선언은 import를 통해 불러와야 한다.
+
+### enum & when
+
+#### enum
+
+```kotlin
+enum class PersonEnumClass(val nickName: String, val age: Int) {
+    JANE("jane", 15), POUL("pol", 13), JIMMY("jim", 23);
+
+    fun introduce() = "$name($age)"
+}
+
+fun main(args: Array<String>) {
+    val jane = PersonEnumClass.JANE
+}
+```
+
+enum class는 각 객체를 나열하는 클래스이다.
+
+하지만 단순히 값만 나열하지는 않고 프로퍼티나 메소드를 정의할 수 있다.
+
+#### when
+
+```kotlin
+fun getName(person: PersonEnumClass) = when (person) {
+    PersonEnumClass.JANE -> {
+        "jane"
+    }
+    PersonEnumClass.POUL -> {
+        "poul"
+    }
+    PersonEnumClass.JIMMY -> {
+        "jimmy"
+    }
+}
+```
+
+코틀린의 when문은 자바로 따지면 switch문에 해당한다.
+
+when문도 if와 같이 식이기에 값을 반환한다.
+
+```kotlin
+fun getName(person: PersonEnumClass) = when (person) {
+    PersonEnumClass.JANE,POUL,JIMMY->{
+        
+    }
+}
+```
+
+여러 값을 매칭할 경우엔 콤마(,)로 구분한다.
+
+코틀린의 when문은 임의의 객체를 허용한다.
+
+#### auto casting
+
+```kotlin
+interface Life
+class Human() : Life{
+    fun think(){}
+}
+class Animal() : Life{
+    fun bark(){}
+}
+fun doSomething(life:Life){
+    when(life){
+        is Human->{
+            life.think()
+        }
+        is Animal->{
+            life.bark()
+        }
+    }
+}
+```
+
+코틀린에서 is를 사용해 변수 타입을 검사한다. (자바의 instanceof와 유사하다.)
+
+코틀린에서는 컴파일러가 자동으로 캐스팅을 해주어 is로 타입을 검사하면 해당 타입으로 접근이 가능하다.
+
+```kotlin
+(life as Human).think()
+```
+
+원하는 타입으로 명시적 캐스팅을하려면 as 키워드를 사용한다.
+
+### for & while
+
+#### while
+
+```kotlin
+do {
+    
+} while (false)
+
+while (true) {
+
+}
+```
+
+코틀린의 while문은 자바의 while문과 동일하다.
+
+#### for
+
+```kotlin
+for (i in 1..10) {
+
+}
+for (i in 100 downTo 0 step 2){
+    
+}
+```
+
+for는 자바의 for-each 루프에 해당하는 형태만 존재한다.
+
+코틀린에서는 루프를 제어하기 위해서 범위를 사용한다. (1..10은 1부터 10까지의 범위를 포함한다.)
+
+downTo를 사용하면 역방향 수열을 만들고 step은 증가 값의 절댓값을 바꾼다.
+
+```kotlin
+val map = TreeMap<Int, String>()
+val list = ArrayList<Int>()
+for ((k, v) in map) {
+
+}
+for (i in list){
+    
+}
+```
+
+리스트나 맵 등의 컬랙션을 활용할 수도 있다.
+
+#### in
+
+```kotlin
+val list = listOf<Int>(1, 2, 3)
+println(5 in list) //false
+println(3 in 1..4) //true
+```
+
+in(!in) 연산자를 사용해 값이 범위나 컬렉션에 속하는지 검사할 수 있다.
 
 ---
 
 > 출처 : Kotlin In Action(드미트리 제메로프, 스베트라나 이사코바)
+
