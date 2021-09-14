@@ -486,6 +486,59 @@ abstract class Parent() {} //상속 o
 | protected    | 하위 클래스 | 적용 불가   |
 | private      | 같은 클래스 | 같은 파일   |
 
+### 내부 클래스
+
+자바에서 다른 클래스 안에 정의한 클래스는 자동으로 내부 클래스이다. 내부 클래스는 바깥쪽 클래스를 자동으로 참조한다.
+
+코틀린의 중첩클래스에서는 아무런 변경자가 붙지 않으면 자바의 static 중첩 클래스와 같다.
+
+바깥쪽 클래스를 참조 하고 싶으면 inner 변경자를 붙이면 된다.
+
+```kotlin
+class OuterClass() {
+    class InnerClass1() {
+        // 외부 클래스를 참조하지 않는다.
+    }
+
+    inner class InnerClass2 {
+        // 외부 클래스를 참조한다.
+        fun getOuterReference() = this@OuterClass
+    }
+}
+```
+
+바깥쪽 클래스의 인스턴스를 가리려면 this@클래스 이름을 사용해야한다.
+
+### sealed class
+
+sealed class는 이 클래스를 상속한 하위 클래스 정의를 제한할 수 있다.
+
+sealed 클래스의 하위 클래스는 반드시 상위 클래스 안에 중첩되어야 한다.
+
+```kotlin
+sealed class Creature {
+    class Animal(): Creature()
+    class Plant(): Creature()
+}
+```
+
+```kotlin
+fun doSomething(creature: Creature) {
+    when (creature) {
+        is Creature.Animal -> {
+
+        }
+        is Creature.Plant -> {
+
+        }
+    }
+}
+```
+
+when 식에서 sealed 클래스를 처리할 때 디폴트 분기(else)가 필요하지 않다.
+
+sealed class는 자동으로 열려져 있다. (open)
+
 
 
 ---
