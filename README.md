@@ -217,7 +217,7 @@ fun main(args: Array<String>) {
 
 enum class는 각 객체를 나열하는 클래스이다.
 
-하지만 단순히 값만 나열하지는 않고 프로퍼티나 메소드를 정의할 수 있다.
+프로퍼티나 메소드를 정의할 수도 있다.
 
 #### when
 
@@ -539,7 +539,181 @@ when 식에서 sealed 클래스를 처리할 때 디폴트 분기(else)가 필�
 
 sealed class는 자동으로 열려져 있다. (open)
 
+### 생성자
 
+코틀린은 주생성자와 부생성자를 구분한다. 또한 초기화 블록을 통해 초키화 로직을 추가할 수 있다.
+
+#### 주 생성자
+
+클래스 이름 뒤에 오는 괄호로 둘러싸인 코드를 주생성자라고 한다.
+
+주 생성자는 생성자 파라미터를 지정하고 그 생성자 파라미터에 의해 초기화되는 프로퍼티를 정의한다.
+
+```kotlin
+class Student constructor(_id: Int, _name: String) {
+    val id: Int
+    val name: String
+
+    init {
+        id = _id
+        name = _name
+    }
+}
+```
+
+constructor 키워드는 주 생성자나 부 생성자를 정의할 때 사용한다.
+
+init 키워드는 초기화 블록을 시작한다. 초기화 블록은 클래스가 인스턴스화될 때 실행된다.
+
+초기화 블록은 주 생성자의 제한적인 코드 때문에 주 생성자와 함께 사용된다. 
+
+한 클래스 안에 여러 초기화 블록을 선언할 수 있다.
+
+```kotlin
+class Student(val id: Int, val name: String)
+```
+
+주 생성자 앞에 별 다른 어노테이션이나 가시성 변경자가 없다면 constructor 키워드를 생략할 수 있다.
+
+생성자 파라미터에 val을 추가하는 방식으로 정의와 초기화를 간략히 쓸 수 있다.
+
+생성자 파라미터에도 디폴트 값을 정의할 수 있다.
+
+```kotlin
+open class Student constructor(val id: Int, val name: String)
+class SecondGradeStudent(id: Int, name: String, major: String) : Student(id, name)
+```
+
+클래스에 기반 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 한다.
+
+기반 클래스를 초기화하기 위해 키반 클래스 이름 뒤에 생성자 인자를 넘긴다.
+
+```kotlin
+open class A
+class B : A()
+```
+
+아무런 별도의 생성자를 정의하지 않으면 컴파일러가 자동으로 인자가 없는 디폴트 생성자를 만들어준다.
+
+인자가 없는 생성자라도 상속한 하위 클래스에서는 반드시 기반 클래스의 생성자를 호출해야 한다.
+
+이 규칙 때문에 기반 클래스의 이름 뒤에는 무조건 괄호가 들어간다.
+
+인터페이스는 생성자가 없기 때문에 괄호가 쓰이지 않는다. 괄호의 유무를 통해 기반 클래스와 인터페이스를 쉽게 구분할 수 있다.
+
+외부에서 인스턴스화하는 것을 막기 위해선 생성자를 private하면 된다.
+
+#### 부 생성자
+
+생성자가 여럿 필요한 경우 부 생성자를 사용한다.
+
+부 생성자는 constructor 키워드로 시작하며 개수에 제한이 없다.
+
+### 프로퍼티
+
+#### 인터페이스의 프로퍼티
+
+```kotlin
+interface PropertyExam {
+    val id: Int
+}
+```
+
+코틀린에서는 인터페이스에 추상 프로퍼티 선언을 넣을 수 있다.
+
+```kotlin
+class Class1(override val id: Int) : PropertyExam {} //주 생성자에서 override
+class Class2() : PropertyExam { //커스텀 게터
+    override val id: Int
+        get() = TODO("Not yet implemented")
+}
+class Class3(uId: Int) : PropertyExam { //프로퍼티 초기화
+    override val id: Int = getIdByUId(uId)
+}
+```
+
+인터페이스의 프로퍼티는 다양한 방식으로 구현할 수 있다.
+
+### 커스텀 세터
+
+```kotlin
+class CustomSetterExam {
+    var name:String="unknown"
+    set(value) {
+        println("name is changed $field -> $value")
+        field=value
+    }
+  var id : Int=0
+  private set
+}
+```
+
+프로퍼티의 값을 바꿀 때 내부적으로 세터가 실행된다.
+
+커스텀 세터를 정의하여 추가 로직을 실행할 수 있다.
+
+커스텀 세터의 fieled는 기존의 값, set 뒤의 괄호(위 코드에서는 value)는 들어온 값을 의미한다.
+
+접근자에서는 field 식별자를 통해 뒷받침하는 필드에 접근할 수 있다. 게터에서는 읽을 수만 있고, 세터에서는 읽고 쓸 수 있다.
+
+접근자에 가시성을 넣어 외부에서 해당 프로퍼티으 ㅣ수정을 막을 수 있다.
+
+### 데이터 클래스와 클래스 위임
+
+```kotlin
+class Product(val name: String, val price: Int) {
+    override fun toString(): String {
+        return "Product (name : $name, price : $price)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Product) return false
+        return other.name == name && other.price == price
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode() * 31 * price
+    }
+}
+
+fun main() {
+    val product = Product("a", 1000)
+    val product2 = Product("a", 1000)
+
+    println(product.toString()) //Product (name : a, price : 1000)
+    println(product.equals(product2)) //true
+    println(product.hashCode()) //3007000
+    println(product2.hashCode()) //3007000
+}
+```
+
+자바와 같이 코틀린의 모든 클래스는 toString, equals, hashCode 등을 오버라이드할 수 있다.
+
+#### toString()
+
+객체의 문자열 표현을 반환한다.
+
+#### equals()
+
+두 객체가 같은지 반환한다.
+
+equals()에서 true가 나올 경우, 그 두 객체는 같은 hashCode를 소유해야 한다.
+
+> 자바의 ==은 원시 타입일 경우 값, 참조 타입일 경우 주소를 비교하여 boolean 값을 반환한다. 
+>
+> 따라서 객체가 같은지 비교하려면 equals를 호출해야 한다.
+>
+> 코틀린의 경우 ==은 내부적으로 equals를 호출하여 객체를 비교한다.
+>
+> 따라서 equals를 오버라이드 하면 ==를 통해 비교할 수 있다. 참조 비교를 위해서는 ===연산자를 사용한다.
+
+#### hashCode()
+
+hashCode는 객체를 식별하는 정수값을 말한다.
+
+String의 hashCodes는 내용이 같다면 같은 코드를 반환하게 오버라이드 되어 있다.
+
+31을 곱하는 이유는 소수이면서 홀수이기 때문이다. 
 
 ---
 
