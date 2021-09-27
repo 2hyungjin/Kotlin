@@ -911,6 +911,22 @@ fun main() {
 
 동반 객체는 자신을 둘러싼 클래스의 모든 멤버에 접근할 수 있다.
 
+#### 무명 객체
+
+```kotlin
+view.addOnclickListner(object : ClickEventListener{
+        override fun click() {
+            TODO("Not yet implemented")
+        }
+})
+```
+
+object 키워드를 사용하여 무명 객체를 정의할 수 있다. 무명 객체는 자바의 무명 내부 클래스를 대신한다.
+
+clickEventListner는 파라미터로 넘어가는 값이기에 이름이 딱히 필요 없다.
+
+따라서 무명 객체를 선언하여 파라미터로 전달할 수 있다.
+
 ---
 
 > 출처 : Kotlin In Action(드미트리 제메로프, 스베트라나 이사코바)
