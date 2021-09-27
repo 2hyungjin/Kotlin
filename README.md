@@ -745,11 +745,87 @@ copy 메소드는 객체를 복사하면서 일부 프로퍼티의 값을 바꾸
 
 시스템이 변하면서 상위 클래스의 구성이 바뀌면 그 과정에서 하위 클래스에 문제가 생겨 코드가 정상 작동하지 못하는 경우가 생길 수 있다.
 
-이를 방지하기 위해 코틀린에서는 기본적으로 클래스를 final로 취급하고 상속이 필요한 클래스만 open으로 두어 open class를 변경할 때는 하위 클래스를 깨지 않게 조심할 수 있다.
+이를 방지하기 위해 코틀린에서는 기본적으로 클래스를 final로 취급하고 상속이 필요한 클래스만 open으로 두어 변경에 대해 대비한다.
 
 하지만 상속을 허용하지 않는 클래스에 새로운 동작을 추가해야 할 때가 있다. 이럴 때 일반적으로 데코레이터 패턴을 사용한다.
 
-데코레이터 패턴은 
+#### 데코레이터 패턴
+
+데코레이터 패턴은 객체에 유연한 메소드 수정을 돕는다.
+
+interface로 이루어진 component와 이를 구현하는 concrete component와 decorator 그리고 decorator를 상속 받는 class로 이루어진다.
+
+**component**
+
+```kotlin
+interface Robot {
+    abstract fun assemble(): String
+}
+```
+
+추상 메소드를 정의한다.
+
+**concrete component**
+
+```kotlin
+class BasicRobot : Robot {
+    override fun assemble(): String {
+        return "조립"
+    }
+}
+```
+
+component를 구현한다. 기본 객체
+
+**decorator**
+
+```kotlin
+open class RobotDecorator(val robot: Robot) : Robot {
+    override fun assemble(): String {
+        return robot.assemble()
+    }
+}
+```
+
+component를 구현하며, 생성자로 전달 받는다.
+
+구현할 때 생성자로 전달 받은 component의 메소드를 실행한다.
+
+**decorator를 상속받는 클래스**
+
+```kotlin
+class RobotWithFistDecorator(robot: Robot) : RobotDecorator(robot) {
+    override fun assemble(): String {
+        return super.assemble() + " 로봇주먹"
+    }
+}
+```
+
+```kotlin
+class RobotWithWingDecorator(robot: Robot) : RobotDecorator(robot) {
+    override fun assemble(): String {
+        return super.assemble() + " 날개"
+    }
+}
+```
+
+생성자로 전달받은 객체의 메소드에 기능을 추가하는 클래스
+
+**main**
+
+```kotlin
+fun main() {
+  	//basic robot의 asssemble 메소드에 주먹을 추가한 객체
+    val robotA = RobotWithFistDecorator(BasicRobot())
+    //basic robot의 asssemble 메소드에 주먹과 날개를 추가한 객체
+    val robotB = RobotWithWingDecorator(RobotWithFistDecorator(BasicRobot()))
+
+    println(robotA.assemble())
+    println(robotB.assemble())
+}
+```
+
+
 
 ---
 
