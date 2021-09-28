@@ -1,3 +1,5 @@
+package obj
+
 enum class PersonEnumClass(val nickName: String, val age: Int) {
     JANE("jane", 15), POUL("pol", 13), JIMMY("jim", 23);
 

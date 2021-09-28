@@ -1,3 +1,5 @@
+package obj
+
 class CountingSet<T>(
     val innerSet: MutableCollection<T> = HashSet()
 ) : MutableCollection<T> by innerSet {

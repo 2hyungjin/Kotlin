@@ -927,6 +927,198 @@ clickEventListner는 파라미터로 넘어가는 값이기에 이름이 딱히 
 
 따라서 무명 객체를 선언하여 파라미터로 전달할 수 있다.
 
+## 람다
+
+람다는 다른 함수에 넘길 수 있는 작은 코드 조각을 뜻한다.
+
+람다를 사용하면 쉽게 공통 코드 구조를 라이브러리 함수로 뽑아낼 수 있다.
+
+### 람다 문법
+
+#### 기본 문법
+
+```kotlin
+val sum = { x: Int, y: Int -> x + y } //람다 선언
+run { println("hello lambda") } //run 함수
+```
+
+람다 식은 항상 중괄호로 둘러싸여 있다.
+
+화살표(->)가 인자 목록과 람다 본문을 구분해준다.
+
+람다 식은 변수에 저장할 수 있고 다른 일반 함수처럼 다룰 수 있다.
+
+run은 인자로 받은 람다를 실행해주는 라이브러리 함수이다.
+
+```kotlin
+data class Student(val name: String, val age: Int)
+val list = listOf<Student>(Student("lee",13),Student("kim",8),Student("park",17))
+list.maxByOrNull { it.age }
+list.maxByOrNull({ it: Student -> it.age }) // 풀어서 쓴다면 이것과 같다.
+list.maxByOrNull() { it: Student -> it.age } // 함수 호출 시 맨 뒤에 있는 인자가 람다 식이라면 그 람다를 괄호 밖을 빼낼 수 있다.
+list.maxByOrNull { it: Student -> it.age } // 람다가 어떤 함수의 유일한 인자이고 괄호 뒤에 람다를 썼다면 빈 괄호를 없앨 수 있다.
+list.maxByOrNull { it -> it.age } // 파라미터 타입을 생략할 수도 있다.
+list.maxByOrNull { it.age } // 람다의 파라미터가 하나 뿐이고 그 타입을 추론할 수 있는 경우 it을 바로 쓸 수 있다.
+```
+
+위 코드는 모두 list의 최댓값을 반환하는 함수이다.
+
+컴파일러는 람다 파라미터의 타입을 추론할 수 있다.
+
+파라미터의 이름을 따로 지정하지 않은 경우 it이라는 이름이 자동으로 만들어진다.
+
+```kotlin
+val sub = { a: Int, b: Int ->
+    println("subtract")
+    println("$a - $b ")
+
+    a - b // 결과 값
+}
+```
+
+본문이 여러 줄로 이루어진 경우 본문의 맨 마지막에 있는 식이 람다의 결과 값이다.
+
+#### 변수 포획
+
+```kotlin
+fun countElements(set: Collection<Any>) {
+    var counter = 0
+    set.forEach {
+        counter++
+    }
+}
+
+```
+
+자바와 다르게 코틀린에서는 람다 밖에 있는 파이널이 아닌 변수에 접근할 수 있다.
+
+이를 변수 포획이라고 한다.
+
+기본적으로 함수 안에 정의된 로컬 변수의 생명 주기는 함수가 반환되면 끝나지만,
+
+어떤 함수가 자신의 로컬 변수를 포획한 람다를 반환하거나 다른 변수에 저장하면 생명주기가 달라질 수 있다.
+
+#### 멤버 참조
+
+```kotlin
+val func1 = Student::age
+```
+
+::를 사용하는 식을 멤버 참조라고 부른다.
+
+멤버 참조는 프로퍼티나 메소드를 단 하나만 호출하는 함수 값을 만들어준다.
+
+::는 클래스와 멤버(프로퍼티, 메소드) 사이에 위치한다.
+
+위 코드는 아래 코드와 같은 역할을 한다.
+
+```kotlin
+val func2 = { student: Student -> student.age }
+run(::func2) //최상위 함수를 호출한다.
+```
+
+멤버 참조는 그 멤버를 호출하는 람다와 같은 타입이다.
+
+```kotlin
+list.maxByOrNull(Student::age)
+list.maxByOrNull { it.age }
+```
+
+따라서 두 코드는 같은 역할을 한다.
+
+```kotlin
+val createNewStudent = ::Student
+```
+
+:: 뒤에 클래스 이름을 넣으면 생성자 참조를 만들 수 있다.
+
+확장 함수도 멤버 함수와 같은 방식으로 참조할 수 있다.
+
+### 람다 식을 활용한 컬렉션 API
+
+람다 식을 활용한 함수형 프로그램이 스타일을 사용하여 컬렉션을 편하게 다룰 수 있다.
+
+#### filter
+
+```kotlin
+val list = listOf<Int>(1, 2, 3, 4, 5, 6)
+println(list.filter { it > 3 }) //[4, 5, 6]
+```
+
+filter 함수는 컬렉션을 이터레이션하면서 주어진 람다에 각 원소를 넘겨서 true를 반환하는 원소만 모은다.
+
+결과 값은 true를 반환한 요소들의 컬렉션이다.
+
+#### map
+
+```kotlin
+println(list.map { it * 2 }) //[2, 4, 6, 8, 10, 12]
+```
+
+map 함수는 컬렉션의 원소에 적용한 결과를 모아서 새 컬렉션을 만든다.
+
+```kotlin
+val studentList = listOf<Student>()
+println(studentList.filter { it.id == studentList.maxByOrNull(Student::id)?.id }) 
+//id가 가장 높은 학생의 이름을 출력한다.
+```
+
+map과 filter를 사용하여 위와 같은 코드를 만들 수도 있다.
+
+하지만 위의 코드는 maxByOrNull 연산을 list의 크기만큼 수행하므로
+
+```kotlin
+val maxId = studentList.maxByOrNull(Student::id)?.id
+println(studentList.filter { it.id == maxId })
+```
+
+이 코드가 더 바람직하다.
+
+#### all & any & count
+
+```kotlin
+val isBiggerthan10 = { num:Int -> num>10} //10보다 큰 수인지 반환하는 술어 함수
+val numList= listOf<Int>(1,3,7,10,24)
+println(numList.all(isBiggerthan10)) //false
+println(numList.any(isBiggerthan10)) //true
+println(numList.count(isBiggerthan10)) //1
+println(numList.find(isBiggerthan10)) //24
+```
+
+all 함수는 모든 원소가 조건을 만족하는지를 반환한다.
+
+any 함수는 조건을 만족하는 원소가 하나라도 있는지를 반환한다.
+
+count 함수는 조건을 만족하는 원소의 수를 반환한다.
+
+find 함수는 조건을 가장 먼저 만족하는 하나의 원소를 반환한다. (없다면 null)
+
+#### groupBy
+
+```kotlin
+val studentList = listOf<Student>(Student(1, "lee"), Student(2, "park"), Student(3, "kim"), Student(1, "choi"))
+println(studentList.groupBy { it.id })
+//{1=[Student(id=1, name=lee), Student(id=1, name=choi)], 2=[Student(id=2, name=park)], 3=[Student(id=3, name=kim)]}
+```
+
+groupBy 함수는 특성에 따라 원소를 구분하여 키가 특성이고 값이 그룹인 맵을 반환한다.
+
+위 코드의 경우 Map<Int,List<Student>>를 반환한다.
+
+#### flatMap
+
+```kotlin
+val classRoomList = listOf<ClassRoom>(
+    ClassRoom(1, studentList),
+    ClassRoom(2, studentList.map { Student(it.id, it.name.reversed()) })
+)
+println(classRoomList.flatMap { it.students })
+//[Student(id=1, name=lee), Student(id=2, name=park), Student(id=3, name=kim), Student(id=1, name=choi), Student(id=1, name=eel), Student(id=2, name=krap), Student(id=3, name=mik), Student(id=1, name=iohc)]
+
+```
+
+flatMap 함수는 인자로 주어진 람다를 컬렉션의 모든 객체에 적용하고 결과로 얻어지는 여러 리스트를 한 리스트로 모은다.
+
 ---
 
 > 출처 : Kotlin In Action(드미트리 제메로프, 스베트라나 이사코바)

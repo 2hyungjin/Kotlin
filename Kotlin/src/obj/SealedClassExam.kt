@@ -1,3 +1,5 @@
+package obj
+
 sealed class Creature {
     class Animal(): Creature()
     class Plant(): Creature()

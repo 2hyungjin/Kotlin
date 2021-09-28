@@ -1,3 +1,5 @@
+package function
+
 class Person(private val age: Int) {
     val availabilityOfDriving: Boolean
         get() = age > 19

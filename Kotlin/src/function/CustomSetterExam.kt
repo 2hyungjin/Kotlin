@@ -1,3 +1,5 @@
+package function
+
 class CustomSetterExam {
     var name: String = "unknown"
         set(value) {

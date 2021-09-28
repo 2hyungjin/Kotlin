@@ -1,3 +1,5 @@
+package basic
+
 class Product(val name: String, val price: Int) {
     override fun toString(): String {
         return "Product (name : $name, price : $price)"
