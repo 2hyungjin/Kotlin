@@ -1,6 +1,7 @@
 package lambda
-
 import Student
+
+val studentList = listOf<Student>(Student(1, "lee"), Student(2, "park"), Student(3, "kim"), Student(1, "choi"))
 
 fun main(args: Array<String>) {
     val list = listOf<Int>(1, 2, 3, 4, 5, 6)
@@ -11,7 +12,6 @@ fun main(args: Array<String>) {
     println(list.map { it * 2 })
 
     //filter & map
-    val studentList = listOf<Student>(Student(1, "lee"), Student(2, "park"), Student(3, "kim"), Student(1, "choi"))
     val maxId = studentList.maxByOrNull(Student::id)?.id
     println(studentList.filter { it.id == maxId })
 
@@ -32,7 +32,9 @@ fun main(args: Array<String>) {
     val classRoomList = listOf<ClassRoom>(
         ClassRoom(1, studentList),
         ClassRoom(2, studentList.map { Student(it.id, it.name.reversed()) }),
-        ClassRoom(3, studentList.filter { it.id ==3 })
+        ClassRoom(3, studentList.filter { it.id == 3 })
     )
     println(classRoomList.flatMap { it.students })
+
+
 }
