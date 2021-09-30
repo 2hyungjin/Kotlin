@@ -1178,15 +1178,39 @@ generateSquence 함수를 사용하여 시퀀스를 만들 수 있다.
 
 ### 자바 함수형 인터페이스 활용
 
+```kotlin
+fun postponeComputation(delay: Int, computation: Runnable) {}
+
+//lambda
+postponeComputation(1000) { println(42) }
+
+//anonymous object
+postponeComputation(1000, object : Runnable {
+    override fun run() {
+        TODO("Not yet implemented")
+    }
+})
+```
+
 추상 메소드가 단 하나만 있는 인터페이스를 함수형 인터페이스 또는 SAM 인터페이스라고 한다.
 
 SAM은 단일 추상 메소드(Single Abstract Method)라는 뜻이다.
 
-코틀린은 함수형 인터페이스를 인자로 취하는 자바 메소드를 호출할 때 람다를 넘길 수 있게 해준다,
+코틀린은 함수형 인터페이스를 인자로 취하는 자바 메소드를 호출할 때 람다를 넘길 수 있게 해준다.
 
-> 
+> 자바와 달리 코틀린에는 함수 타입을 인자로 사용 가능하므로 SAM 인터페이스가 아니라 함수 타입을 인자로 사용해야 한다.
 
+컴파일러는 자동으로 람다를 무명 클래스의 인스턴스로 만들어준다. 무명 클래스를 만들고 클래스 안의 유일한 추상 메서드를 람다의 본문으로 사용한다.
 
+무명 객체를 생성해서 호출할 수도 있다.
+
+```kotlin
+fun returnRunnable():Runnable{
+    return Runnable {  }
+}
+```
+
+함수형 인터페이스의 인스턴스를 반환하기위해서는 반환하고픈 람다를 SAM 생성자로 감싸야한다.
 
 
 
