@@ -1074,7 +1074,7 @@ println(studentList.filter { it.id == maxId })
 
 이 코드가 더 바람직하다.
 
-#### all & any & count
+#### all & any & count & find
 
 ```kotlin
 val isBiggerthan10 = { num:Int -> num>10} //10보다 큰 수인지 반환하는 술어 함수
@@ -1211,6 +1211,67 @@ fun returnRunnable():Runnable{
 ```
 
 함수형 인터페이스의 인스턴스를 반환하기위해서는 반환하고픈 람다를 SAM 생성자로 감싸야한다.
+
+### with & apply
+
+두 함수는 수신 객체를 명시하지 않고 람다의 본문 안에서 다른 객체의 메소드를 호출할 수 있게 한다.
+
+그런 람다를 수신 객체 지정 람다라고 부른다.
+
+#### with
+
+```kotlin
+fun even(limit: Int): List<Int> {
+    val evenList = mutableListOf<Int>()
+    for (i in 1..limit){
+        if(i%2==0){
+            evenList.add(i)
+        }
+    }
+    return evenList
+}
+```
+
+위 코드는 여러 메소드를 호출하면서  evenList가 여러 번 사용된다. 코드가 더 길거나 다른 메소드들이 많이 되는 경우 이는 가독성이 떨어질 수 있다.
+
+위 코드를 with을 사용하여 가독성 좋게 수정할 수 있다.
+
+```kotlin
+fun even(limit: Int): List<Int> {
+    return with(mutableListOf<Int>()) {
+        for (i in 1..limit) {
+            if (i % 2 == 0) {
+                add(i)
+            }
+        }
+        this
+    }
+}
+```
+
+with는 파라미터가 두 개인 함수이다.
+
+첫 번째 인자로 받은 객체를 두 번째 인자인 람다의 수신 객체로 만든다.
+
+람다에서는  this.을 사용해 그 수신 객체에 접근할 수 있으며 이는 생략 가능하다.
+
+#### apply
+
+```kotlin
+fun even(limit: Int): List<Int> = mutableListOf<Int>().apply {
+    for (i in 1..limit){
+        if(i%2==0){
+            add(i)
+        }
+    }
+}
+```
+
+apply 함수는 항상 자신에게 전달된 객체를 반환한다는 점을 제외하고는 with와 거의 같다.
+
+apply 함수는 객체의 인스턴스를 만들면서 즉시 초기화가 필요할 경우 유용하게 쓸 수 있다.
+
+apply 함수는 확장 함수기에 apply의 수신 객체가 전달받은 람다의 수신 객체가 된다.
 
 
 
