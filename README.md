@@ -1273,7 +1273,228 @@ apply 함수는 객체의 인스턴스를 만들면서 즉시 초기화가 필�
 
 apply 함수는 확장 함수기에 apply의 수신 객체가 전달받은 람다의 수신 객체가 된다.
 
+## 코틀린 타입 시스템
 
+### 널 가능성
+
+널 가능성은 NullPointerException 오류를 피할 수 있게 하기 위한 코틀린 타입 시스템의 특성이다.
+
+코틀린은 널이 될 수 있는지 여부를 타입 시스템에 추가함으로써 컴파일 시 여러 오류를 미리 감지하여 실행 시점에서의 예외를 줄여준다.
+
+#### 널이 될 수 있는 타입
+
+```kotlin
+fun strLen(string: String): Int = string.length
+fun nullableStrLen(string: String?): Int = string.length //string은 null일 수 있으므로 해당 연산이 불가능하다
+strLen(null) //불가능
+nullableStrLen(null) //가능
+```
+
+코틀린의 모든 타입은 기본적으로 널이 될 수 없는 타입이다.
+
+타입 이름 뒤에 물음표를 붙이면 그 타입의 변수나 프로퍼티에 null을 허용한다는 뜻이다.
+
+널이 될 수 있는 타입에는 많은 제약 조건이 붙는다.
+
+- 널이 될 수 있는 타입의 변수는 수행할 수 있는 연산이 제한된다.
+
+- 널이 될 수 있는 타입의 변수는 변수.메소드()처럼 메소드를 직접 호출할 수 없다.
+
+- 널이 될 수 있는 값을 널이 될 수 없는 타입의 변수에 대입할 수 없다.
+
+- 널이 될 수 있는 값을 널이 될 수 없는 타입의 파라미터로 넣을 수 없다.
+
+- 널이 될 수 있는 타입은 null과 비교하고 나면 그 값을 기억한다.
+
+```kotlin
+fun nullableStrLen(string: String?): Int = if (string != null) string.length else 0 //null이 아님을 확인했기에 연산을 호출할 수 있다.
+```
+
+#### ?. (안전한 호출 연산자)
+
+```kotlin
+fun nullableStrLen(string: String?): Int? = string?.length
+//fun nullableStrLen(string: String?): Int? = if (string != null) string.length와 같다.
+```
+
+?. 연산자는 null 검사와 메소드 호출을 한 번의 연산으로 수행한다.
+
+호출하는 값이 null이 아니라면 메소드를 호출하고 null이라면 호출을 무시하고 null 결과 값이 된다.
+
+#### ?: (엘비스 연산자)
+
+```kotlin
+fun nullableStrLen(string: String?): Int = string?.length ?: 0
+//fun nullableStrLen(string: String?): Int = if (string != null) string.length else 0와 같다.
+```
+
+엘비스 연산자는 null 대신 사용할 디폴트 값을 지정할 때 편리하게 사용할 수 있다.
+
+엘비스 연산자는 이항 연산자로 값이 null인지 검사하여 null이 아니면 좌항의 값, null이면 우항의 default값이 반환된다.
+
+엘비스 연산자의 우항에 return, throw 등의 연산을 넣을 수도 있다.
+
+#### as? (안전한 캐스트)
+
+as? 연산자는 어떤 값을 지정한 타입으로 캐스트하고 변환할 수 없으면 null을 반환한다.
+
+안전한 캐스트는 보통 캐스트를 수행한 뒤에 엘비스 연산자를 사용한다.
+
+#### !! (널 아님 단언)
+
+!! 연산자를 사용하면 어떤 값이든 null이 될 수 없는 타입으로 바꿀 수 있다.
+
+null에 !! 연산자를 사용하면 NullPointerException이 발생한다.
+
+!! 연산자를 사용하기보다 더 나은 해법을 찾아보는 것이 좋다.
+
+### let 함수
+
+```kotlin
+val num: Int? = null
+num?.let {
+    someMethod(it)
+    someMethod2(it)
+}
+//num이 null이므로 아무 일도 일어나지 않는다.
+```
+
+let 함수를 안전한 호출 연산자(?.)와 함께 사용하면 null인지 검사 후에 값을 편리하게 사용할 수 있다.
+
+안전한 호출 연산자를 사용하여 호출한 let 함수는 수신 객체가 null이 아닐 경우 null이 될 수 없는 타입의 수신 객체를 람다에게 전달한다.
+
+수신 객체가 null일 경우 아무 일도 일어나지 않는다.
+
+### lateinit
+
+```kotlin
+var student:Student?=null
+fun initProperty(student: Student){
+    this.student=student
+}
+//bad way
+```
+
+코틀린에서 일반적으로 생성자에서 모든 프로퍼티를 초기화해야 한다.
+
+그래서 널이 될 수 있는 타입으로 프로퍼티를 선언하고 초기화 하는 경우가 있는데,
+
+이는 프로퍼티의 모든 접근에 널 검사를 넣거나 !! 연산자를 써야하는 불편함이 있다.
+
+```kotlin
+lateinit var student:Student
+fun initProperty(student: Student){
+    this.student=student
+}
+```
+
+이를 해결하기 위해 lateinit 변경자를 붙여 프로퍼티를 나중에 초기화 할 수 있다.
+
+나중에 초기화하는 프로퍼티는 항상 var로 선언돼야 한다.
+
+lateinit 프로퍼티를 초기화 하기 전에 프로퍼티에 접근하면 "lateinit 프로퍼티를 아직 초기화하지 않았음" 예외가 발생한다.
+
+### 널이 될 수 있는 타입 확장
+
+널이 될 수 있는 타입에 대한 확장 함수를 정의하면 null값을 효율적으로 활용할 수 있다.
+
+예를 들어 String? 타입의 수신 객체에 대해 호출할 수 있는 isNullOrEmpty, isNullOrBlank가 있다.
+
+### 타입 파라미터
+
+모든 타입 파라미터는 널이 될 수 있다.
+
+### 자바와 상호 운용성
+
+```java
+@Nullable
+String string1; //var string1:String?
+@NotNull
+String string2; //var string2:String?
+```
+
+코틀린의 널 허용성은 자바의 어노테이션으로 표현된다.
+
+**플랫폼 타입**
+
+플랫폼 타입은 코틀린이 널 관련 정보를 알 수 없는 타입을 말한다.
+
+어노테이션 없이 쓰여진 자바 코드의 경우 코틀린 컴파일러가 널 가능성에 대해 모르기(플랫폼 타입이기) 때문에 직접 처리해야 한다.
+
+널 체크를 해도, 하지 않아도 되며 널체크를 하지 않을 때 예외가 발생될 수 있음을 염두에 둬야 한다.
+
+**상속**
+
+코틀린에서 자바 메소드를 오버라이드할 때 그 메소드의 파라미터와 반환타입의 널 허용성에 대해 생각해봐야 한다.
+
+코틀린 컴파일러는 널 허용성에 대해 모든 구현을 받아들인다.
+
+### 원시 타입
+
+자바는 원시 타입과 참조 타입을 구분한다.
+
+원시 타입(int, double...)은 변수에 그 값이 직접 들어가지만, 참조 타입(String...)의 변수에는 메모리상의 객체 위치가 들어간다.
+
+코틀린은 원시 타입과 참조 타입을 구분하지 않는다.
+
+그렇다고 모두 객체로 표현하지는다.(모두 객체로 표현할 경우 비효율적이다.)
+
+코틀린은 원시타입을 실행 시점에서 가능한 가장 효율적인 방식으로 표현된다. (ex 그냥 사용할 경우  Int, 컬렉션의 타입 파라미터로 들어갈 경우 Integer)
+
+자바에서는 참조 타입에만 null을 사용할 수 있으므로 null이 될 수 있는 원시 타입의 경우 자바의 래퍼 타입으로 컴파일 된다.
+
+### 숫자 변환
+
+```kotlin
+val i = 1
+val j: Long = i //자동 변환(불가능)
+val k: Long = i.toLong() //변환 메소드 호출(가능)
+```
+
+코틀린은 숫자를 다른 타입의 숫자로 자동 변환하지 않는다.
+
+숫자의 타입을 변환할 경우 변환 메소드를 호출해야 한다.
+
+### Any, Any?
+
+자바에서  Object가 클래스의 최상위 타입인 것처럼 코틀린의 최상위 타입은 Any 타입이다.
+
+자바에서는 참조 타입만 Object의 계층에 포함되며 원시 타입은 포함되지 않지만 코틀린의 Any타입은 모든 타입의 조상 타입이다.
+
+Any는 자바의 Object와 대응하며 toString, equals, hashCode 메소드가 들어있다. (자바의 wait나 notify는 Object로 형변환을 해야 가능하다.)
+
+### Unit
+
+Unit 타입은 자바 void와 같은 기능이다. 반환하지 않는 함수의 반환 타입으로 사용 가능하다.
+
+### Nothing
+
+```kotlin
+val result: String?=null
+println(result ?: fail("fail"))
+println("result is arrived")
+```
+
+Nothing 타입은 함수가 정상적으로 끝나지 않는다는 의미를 갖고 있다.
+
+Nothing 타입은 아무 값을 포함하지 않아서 함수의 반환 타입이나 반환 타입으로 쓰일 타입 파라미터로만 쓰일 수 있다.
+
+엘비스 연산자의 우항에 Nothing을 반환하는 함수를 사용하면 null일 경우 오류를 발생한다는 것을 컴파일러가 파악하고 해당 값이 null이 아님을 추론한다.
+
+### 컬렉션과 배열
+
+List<Int?>의 경우 Int? 타입의 값을 저장하는 리스트이고 List<Int>?의 경우 null일 수 있는  Int형 리스트이다.
+
+코틀린에서는 컬렉션을 읽기 전용 컬렉션(Collection)과 변경 가능한 컬렉션(MutableCollection)으로 나눈다.
+
+코드에서 가능하면 읽기 전용 컬렉션을 사용하고 변경할 필요가 있을 때만 변경 가능한 컬렉션을 사용하는 것이 좋다. (용도를 분명히 하기 위해)
+
+코틀린에서 배열을 만드는 방법은 다양하다.
+
+- arrayOf 함수에 원소를 넘긴다
+- arrayOfNulls 함수에 정수 값을 인자로 넘기면 모든 원소가 null이고 인자로 넘긴 값과 크기가 같은 배열을 만들 수 있다.
+- Array 생성자는 배열 크기와 람다를 인자로 받아서 람다를 호출해 원소를 초기화 해준다.
+- 원시 타입의 배열을 만들기 위해서는 원시 타입마다 제공되는 별도 클래스를 생성한다. (IntArray, ByteArray)
 
 ---
 
