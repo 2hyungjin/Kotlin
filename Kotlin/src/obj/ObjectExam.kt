@@ -8,12 +8,7 @@ object CreditCard {
 class Employee private constructor(val name: String) {
     companion object {
         fun work(){
-            
         }
-    }
-
-    object a {
-
     }
 }
 

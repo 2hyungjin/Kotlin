@@ -410,7 +410,7 @@ varargs를 사용하면 원하는 개수만큼 값을 인자로 넘길 수 있�
 
 ### 중위 호출
 
-map을 생성할 때 사용하는 to라는 단어는 주위 호출이라는 방식으로 불러온 일반 메소드이다.
+map을 생성할 때 사용하는 to라는 단어는 중위 호출이라는 방식으로 불러온 일반 메소드이다.
 
 중위 호출 시에는 수신 객체와 유일한 메소드 인자 사이에 메소드 이름을 넣는다.
 
@@ -656,7 +656,7 @@ class CustomSetterExam {
 
 접근자에서는 field 식별자를 통해 뒷받침하는 필드에 접근할 수 있다. 게터에서는 읽을 수만 있고, 세터에서는 읽고 쓸 수 있다.
 
-접근자에 가시성을 넣어 외부에서 해당 프로퍼티으 ㅣ수정을 막을 수 있다.
+접근자에 가시성을 넣어 외부에서 해당 프로퍼티의 수정을 막을 수 있다.
 
 ### 모든 클래스가 정의해야 하는 메소드
 
@@ -852,7 +852,7 @@ fun main() {
 }
 ```
 
-위의 예제는 증가 회수를 가져올 수 있는 컬랙션을 만드는 코드이다.
+위의 예제는 증가 횟수를 가져올 수 있는 컬랙션을 만드는 코드이다.
 
 CountingSet 클래스는 innerSet을 파라미터로 전달받아 MutableCollection의 구현을 innerSet에게 위임한다.
 
@@ -1149,7 +1149,7 @@ Sequence
 .toList //최종 연산
 ```
 
-시퀀스는 중간 연산과 최종 연산으로 나뉜다. 중간 연산은 최초 시퀀스의 원소를 변환하는 방버블 아는 다른 시퀀스를 반환한다.
+시퀀스는 중간 연산과 최종 연산으로 나뉜다. 중간 연산은 최초 시퀀스의 원소를 변환하는 방법을 아는 다른 시퀀스를 반환한다.
 
 최종 연산은 결과를 반환한다. 결과는 최초 컬렉션에 대해 변환을 적용한 시퀀스로부터 계산을 수행해 얻는 컬렉션, 원소, 숫자 또는 객체이다.
 
@@ -1232,7 +1232,7 @@ fun even(limit: Int): List<Int> {
 }
 ```
 
-위 코드는 여러 메소드를 호출하면서  evenList가 여러 번 사용된다. 코드가 더 길거나 다른 메소드들이 많이 되는 경우 이는 가독성이 떨어질 수 있다.
+위 코드에서 여러 메소드를 호출하게 되면  evenList가 여러 번 사용된다. 코드가 더 길거나 다른 메소드들이 많이 되는 경우 이는 가독성이 떨어질 수 있다.
 
 위 코드를 with을 사용하여 가독성 좋게 수정할 수 있다.
 
@@ -1495,6 +1495,257 @@ List<Int?>의 경우 Int? 타입의 값을 저장하는 리스트이고 List<Int
 - arrayOfNulls 함수에 정수 값을 인자로 넘기면 모든 원소가 null이고 인자로 넘긴 값과 크기가 같은 배열을 만들 수 있다.
 - Array 생성자는 배열 크기와 람다를 인자로 받아서 람다를 호출해 원소를 초기화 해준다.
 - 원시 타입의 배열을 만들기 위해서는 원시 타입마다 제공되는 별도 클래스를 생성한다. (IntArray, ByteArray)
+
+## 연산자 오버로딩
+
+코틀린은 언어의 기능과 미리 정해진 이름의 함수를 연결해주는 관례를 사용한다.
+
+기존 자바 클래스에 대해 확장 함수를 구현하면서 관례에 따라 이름을 붙이면 기존 자바 코드를 바꾸지 않아도 새로운 기능을 쉽게 부여할 수 있다.
+
+### 산술 연산자 오버로딩
+
+자바에서는 String에 대해 +연산자를 사용할 수 있고  원시 타입에 대해서만 산술 연산자를 사용할 수 있다.
+
+코틀린에서는 클래스에 대해 일반 산술 연산자를 정의할 수 있다.
+
+#### 이항 산술 연산 오버로딩
+
+```kotlin
+data class Point(val x: Int, val y: Int) {
+    operator fun plus(other: Point): Point = Point(x + other.x, y + other.y)
+}
+
+fun main() {
+    val point1=Point(3,4)
+    val point2=Point(4,2)
+    println(point1 + point2)
+}
+```
+
+operator 키워드가 붙은 plus 함수는 +로 호출할 수 있다.
+
+operator 키워드는 그 함수가 관례를 따르는 함수임을 뜻한다.
+
+operator가 없는데 관례에서 사용하는 함수 이름을 쓰면 operator 변경자를 추가해야한다는 오류가 뜬다.
+
+```kotlin
+operator fun Point.plus(other: Point):Point=Point(x+other.x,y+other.y)
+```
+
+확장 함수로 정의할 수도 있다.
+
+| 식    | 함수 이름 |
+| :---- | --------- |
+| a * b | times     |
+| a / b | div       |
+| a % b | mod       |
+| a + b | plus      |
+| a - b | minus     |
+
+연산자 우선순위는 표준 연산자 우선 순위와 같다.
+
+연산자를 정의할 때 두 피연산자가 같은 타입일 필요는 없다. 연산자의 수신 객체와 반환타입 또한 다른 타입이어도 된다.
+
+코틀린 연산자가 자동으로 교환법칙을 지원하지는 않는다.
+
+#### 복합 대입 연산자 오버로딩
+
+```kotlin
+operator fun MutableCollection<Point>.plusAssign(other: Point){
+    this.add(other)
+}
+```
+
+코틀린은 +=, -=와 같은 복합 대입 연산자 오버로딩도 지원한다.
+
++=연산의 경우 자동으로 A=A+B가 호출되기도 하지만
+
+반환 타입이 plusAssign, minusAssign처럼 Assign을 붙여 오버로딩할 수도 있다.
+
+plus와 plusAssign을 동시에 정의하면 오류가 생기므로 동시에 정의해서는 안된다.
+
+#### 단항 연산자 오버로딩
+
+```kotlin
+operator fun Point.not():Point{
+    return Point(this.y,this.x)
+}
+```
+
+단항 연산자도 마찬가지로 operator 키워드와 미리 정의된 함수의 이름으로 오버로딩할 수 있다.
+
+이 때 파라미터는 필요하지 않다.
+
+| 식       | 함수 이름  |
+| -------- | ---------- |
+| +a       | unaryPlus  |
+| -a       | unaryMinus |
+| !a       | not        |
+| ++a, a++ | inc        |
+| --a, a-- | dec        |
+
+### 비교 연산자 오버로딩
+
+#### equals
+
+```kotlin
+class Board(val id: Long, val title: String, val contents: String) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Board) return false
+        return other.id == this.id && other.contents == this.contents && other.title == this.title
+    }
+}
+```
+
+== 연산자 호출은 equals 메소드 호출로 컴파일 된다. 또한 != 연산자 또한 equals 메소드 호출의 값을 부정한 값으로 호출된다.
+
+==와 !=는 내부에서 인자가 널인지 검사하므로 널이 될 수 있는 타입의 값에 사용할 수 있다.
+
+a==b를 호출할 경우 a가 널이 아닌 경우에 a.equals(b)를 호출하고 a가 널이고 b도 널이라면 true를 반환한다.
+
+=== 연산자(식별자 비교)는 객체가 같은지 검사한다. (===는 오버로딩할 수 없다.)
+
+equals는 Any의 operator 메소드를 오버라이드하는 것이므로 operation 대신 override가 붙어있다.
+
+Any에서 상속받은 equals가 확장 함수보다 우선 순위가 높기 때문에 equals는 확장 함수로 정의할 수 없다.
+
+```kotlin
+val board=Board(1,"a","aa")
+val board2=Board(1,"a","aa")
+val board3=Board(2,"ab","aa")
+println(board==board2) //true
+println(board==null) //false
+println(board==board3) //false
+```
+
+#### compareTo
+
+```kotlin
+class Board(val id: Long, val title: String, val contents: String) : Comparable<Board> {
+    override fun compareTo(other: Board): Int {
+        return compareValuesBy(this, other,Board::id)
+    }
+}
+```
+
+자바의 Comparable 인터페이스의 compareTo 메소드는 한 객체와 다른 객체의 크기를 비교해 정수로 나타내준다,
+
+코틀린에서는 비교 연산자(<, >, <=, >=)는 compareTo 메소드를 호출하는 관례를 제공한다.
+
+a>=b -> a.compareTo(b)>=0 으로 호출된다.
+
+compareTo도 Comparable의 operator 메소드를 오버라이드 하는 것이므로 operator를 붙일 필요 없다.
+
+compareValuesBy는 코틀린의 표준 라이브러리 함수이다. 두 객체와 여러 비교 함수를 인자로 받아 두 객체를 비교해준다.
+
+### 컬렉션에 관한 관례
+
+#### get, set
+
+```kotlin
+data class Name(val firstName:String, val lastName:String){
+    operator fun get(index:Int):String{
+        return when(index){
+            0-> firstName
+            1-> lastName
+            else -> throw IndexOutOfBoundsException()
+        }
+    }
+}
+```
+
+인덱스 연산자를 사용해 원소를 읽는 연산은 get 연산자 메소드로 변환되고, 원소를 쓰는 연산은 set 메소드로 변환된다.
+
+파라미터는 다양한 타입이 가능하고 여러 개도 가능하다.
+
+get은 class[index], set은 class[index]=value로 호출된다.
+
+```kotlin
+operator fun set(index: Int,value:String){
+    when(index){
+        0->firstName=value
+        1->lastName=value
+        else->throw IndexOutOfBoundsException()
+    }
+}
+```
+
+#### in
+
+```kotlin
+operator fun contains(c:Char):Boolean{
+    return firstName.contains(c)||lastName.contains(c)
+}
+```
+
+in 연산자는 객체가 컬렉션에 들어있는지 검사한다.
+
+in연산자는 contains를 호출한다.
+
+in 연산자의 우항이 수신 객체, 좌항이 파라미터가 된다.
+
+#### rangeTo
+
+```kotlin
+var now=LocalDate.now()
+val thisWeek=now..now.plusWeeks(1)
+println(now.plusDays(1) in thisWeek)
+```
+
+범위를 만들기 위해서는 ..연산자를 사용한다. (1..10은 1부터 10까지의 범위를 말한다.)
+
+.. 연산자는 rangeTo 메소드를 호출한다.
+
+rangeTo는 범위를 반환하며  in을 통해 범위에 속해있는지 검사할 수 있다.
+
+코틀린 표준 라이브러리에는 모든  Comparable 객체에 대해 적용 가능한  rangeTo 함수가 들어있다.
+
+#### iterator 관례
+
+```kotlin
+operator fun ClosedRange<LocalDate>.iterator():Iterator<LocalDate> = object :Iterator<LocalDate>{
+    var current=start
+    override fun hasNext(): Boolean {
+        return current<=endInclusive
+    }
+
+    override fun next(): LocalDate =current.apply {
+        current=plusDays(1)
+    }
+}
+```
+
+코틀린의 for 루프는 범위 검사와 동일하게 in 연산자를 사용한다.
+
+하지만 이 때 in은 list.iterator()를 호출하여 이터레이터를 얻고 iterator.hasNext/next 메소드를 호출하는 식으로 변환된다.
+
+확장 함수 iterator를 정의하면 for 루프 안에서 사용할 수 있다.
+
+### 구조 분해 선언
+
+```kotlin
+val myName=Name("lee","hyungjin")
+val (first,last)=myName
+// first="lee", last="hyungjin"
+```
+
+구조 분해를 사용하면 복합적인 값을 분해해서 여러 다른 변수를 한꺼번에 초기화 할 수 있다.
+
+구조 분해 선언은 각 변수를 초기화 하기 위해 componentN 메소드를 호출한다(N은 변수 위치에 따라 붙는 번호이다.)
+
+데이터 클래스의 주 생성자에 들어있는 프로퍼티에 대해서는 컴파일러가 자동으로 componentN 함수를 만들어 준다.
+
+```kotlin
+class Locate(val x:Int,val y : Int){
+    operator fun component1()=x
+    operator fun component2()=y
+}
+```
+
+데이터 클래스가 아닌 경우 componentN 함수를 오버로딩하여 사용할 수 있다.
+
+
 
 ---
 
