@@ -1,5 +1,3 @@
-
-
 # Kotlin
 
 코틀린에 대한 이해가 부족하고 더 **코틀린 다운 코드**를 짜고 싶어서 코틀린 컴파일러 개발자가 쓴  **"Kotlin In Action"** 책을 읽게 되었습니다.
@@ -584,9 +582,9 @@ open class Student constructor(val id: Int, val name: String)
 class SecondGradeStudent(id: Int, name: String, major: String) : Student(id, name)
 ```
 
-클래스에 기반 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 한다.
+클래스에 부모 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 한다.
 
-기반 클래스를 초기화하기 위해 키반 클래스 이름 뒤에 생성자 인자를 넘긴다.
+부모 클래스를 초기화하기 위해 키반 클래스 이름 뒤에 생성자 인자를 넘긴다.
 
 ```kotlin
 open class A
@@ -1744,6 +1742,102 @@ class Locate(val x:Int,val y : Int){
 ```
 
 데이터 클래스가 아닌 경우 componentN 함수를 오버로딩하여 사용할 수 있다.
+
+### 초기화 지연 패턴
+
+```kotlin
+class Teacher {
+    private var _students: List<Student>? = null
+    val students: List<Student>
+        get() {
+            if (_students == null) _students = getList()
+            return _students!!
+        }
+}
+```
+
+지연 초기화는 객체의 일부분을 초기화하지 않고 남겨뒀다가 그 부분이 필요할 경우 초기화할 때 쓰이는 패턴이다.
+
+초기화 과정에 자원을 많이 사용하거나 객체를 사용할 때마다 꼭 초기화하지 않아도 되는 프로퍼티에 지연 초기화 패턴을 사용한다.
+
+_students라는 프로퍼티는 값을 저장하고 students는 _students라는 프로퍼티에 대한 읽기 연산만을 제공한다.
+
+_students는 널이 가능한 타입이지만 students는 널이 될 수 없는 타입이기에 프로퍼티를 두 개 사용해야 한다.
+
+#### by lazy를 활용한 초기화 지연
+
+```kotlin
+val students:List<Student> by lazy { getList() }
+```
+
+lazy 함수는 코틀린 관례에 맞는 시그니처의 getValue 메소드가 들어있는 메소드를 반환한다.
+
+lazy 함수의 인자는 값을 초기화할 때 호출할 람다이다.
+
+#### 위임 프로퍼티 구현
+
+```kotlin
+//changeSupport를 갖는 도우미 클래스
+open class PropertyChangeAware {
+    protected val changeSupport = PropertyChangeSupport(this)
+    fun addPropertyChangeListener(listener: PropertyChangeListener) {
+        changeSupport.addPropertyChangeListener(listener)
+    }
+
+    fun removePropertyChangeListener(listener: PropertyChangeListener) {
+        changeSupport.removePropertyChangeListener(listener)
+    }
+}
+```
+
+프로퍼티가 바뀔 때 리스너에게 변경 통지를 보내고 싶을 때 자바에선 PropertyChangeSupport와 PropertyChangeEvent 클래스를 사용하여 자주 처리하곤 한다.
+
+PropertyChangeSupport 클래스는 리스너의 목록을 관리하고 PropertyChangeEvent가 들어오면 모든 리스너에게 이벤트를 통지한다.
+
+```kotlin
+class Person(val name: String, age: Int, salary: Int) : PropertyChangeAware() {
+    var age: Int = age
+        set(value) {
+            val oldValue = field
+            field = value
+            changeSupport.firePropertyChange(
+                "age", oldValue, value
+            ) // 이벤트 보내기
+        }
+}
+
+fun main() {
+    val a = Person("lee", 13, 3500)
+    a.addPropertyChangeListener {
+        println("${it.propertyName} value is changed ${it.oldValue} -> ${it.newValue}")
+    }
+    a.age = 18 //age value is changed 13 -> 18
+}
+```
+
+위 코드를 코틀린에 관례에 맞게 수정하면 다음과 같다.
+
+```kotlin
+class ObservableProperty(var propValue: Int, val changeSupport: PropertyChangeSupport) {
+    operator fun getValue(p: PersonRefactored, prop: KProperty<*>): Int = propValue
+    operator fun setValue(p: PersonRefactored, prop: KProperty<*>, value: Int) {
+        val oldValue = propValue
+        propValue = value
+        changeSupport.firePropertyChange(prop.name, oldValue, value)
+    }
+}
+
+class PersonRefactored(val name: String, age: Int, salary: Int) : PropertyChangeAware() {
+    var age by ObservableProperty(age, changeSupport)
+    var salary by ObservableProperty(salary,changeSupport)
+}
+```
+
+getValue, setValue함수가 있으면 by를 통해 위임 프로퍼티를 사용할 수 있다.
+
+by 오른 쪽에 오는 객체를 위임 객체라고 한다.
+
+코틀린은 위임 객체를 감춰진 프로퍼티에 저장하고, 주 객체의 프로퍼티를 읽거나 쓸 때 위임 객체의 get,setValue를 호출한다.
 
 
 
