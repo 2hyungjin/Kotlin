@@ -2,6 +2,7 @@ package overloading
 
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 open class PropertyChangeAware {
@@ -24,6 +25,10 @@ class Person(val name: String, age: Int, salary: Int) : PropertyChangeAware() {
                 "age", oldValue, value
             ) // 이벤트 보내기
         }
+
+    var salary: Int by Delegates.observable(0) { property, oldValue, newValue ->
+        println("${property.name} is changed $oldValue -> $newValue")
+    }
 }
 
 class ObservableProperty(var propValue: Int, val changeSupport: PropertyChangeSupport) {
@@ -37,9 +42,9 @@ class ObservableProperty(var propValue: Int, val changeSupport: PropertyChangeSu
 
 class PersonRefactored(val name: String, age: Int, salary: Int) : PropertyChangeAware() {
     var age by ObservableProperty(age, changeSupport)
-    var salary by ObservableProperty(salary,changeSupport)
+    var salary by ObservableProperty(salary, changeSupport)
 }
 
 fun main(args: Array<String>) {
-    
+
 }

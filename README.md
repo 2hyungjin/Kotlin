@@ -413,7 +413,7 @@ map을 생성할 때 사용하는 to라는 단어는 중위 호출이라는 방�
 중위 호출 시에는 수신 객체와 유일한 메소드 인자 사이에 메소드 이름을 넣는다.
 
 ```kotlin
-val map= mapOf<Int,String>(1 to "one", 2.to("two"))
+val map = mapOf<Int,String>(1 to "one", 2.to("two"))
 ```
 
 두 가지 방식은 같은 기능을 하지만 첫번째 경우는 중위 호출을 사용한 경우이다.
@@ -1468,6 +1468,10 @@ Unit 타입은 자바 void와 같은 기능이다. 반환하지 않는 함수의
 ### Nothing
 
 ```kotlin
+fun fail(msg: String): Nothing {
+    throw Exception(msg)
+}
+
 val result: String?=null
 println(result ?: fail("fail"))
 println("result is arrived")
@@ -1699,7 +1703,7 @@ rangeTo는 범위를 반환하며  in을 통해 범위에 속해있는지 검사
 
 코틀린 표준 라이브러리에는 모든  Comparable 객체에 대해 적용 가능한  rangeTo 함수가 들어있다.
 
-#### iterator 관례
+#### iterator 
 
 ```kotlin
 operator fun ClosedRange<LocalDate>.iterator():Iterator<LocalDate> = object :Iterator<LocalDate>{
@@ -1839,7 +1843,13 @@ by 오른 쪽에 오는 객체를 위임 객체라고 한다.
 
 코틀린은 위임 객체를 감춰진 프로퍼티에 저장하고, 주 객체의 프로퍼티를 읽거나 쓸 때 위임 객체의 get,setValue를 호출한다.
 
+```kotlin
+var salary: Int by Delegates.observable(0) { property, oldValue, newValue ->
+    println("${property.name} is changed $oldValue -> $newValue")
+}
+```
 
+관찰 가능한 프로퍼티 로직을 코틀린 표준 라이브러리로 쉽게 사용할 수 있다.
 
 ---
 

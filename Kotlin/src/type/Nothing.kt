@@ -7,7 +7,8 @@ fun fail(msg: String): Nothing {
 }
 
 fun main() {
-    val result: String?=null
+    val result: String? = null
     println(result ?: fail("fail"))
     println("result is arrived")
 }
+
