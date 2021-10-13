@@ -1889,6 +1889,8 @@ fun calculateOneAndTwo(operation: (Int, Int) -> Int = { x, y -> x * y }) {
 
 ### 함수 반환
 
+함수를 반환 타입으로 사용할 수도 있다.
+
 
 
 ---
