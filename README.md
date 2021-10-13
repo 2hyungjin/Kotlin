@@ -1889,9 +1889,39 @@ fun calculateOneAndTwo(operation: (Int, Int) -> Int = { x, y -> x * y }) {
 
 ### 함수 반환
 
+```kotlin
+fun someFun(n: Int): (num: Int) -> Int {}
+```
+
 함수를 반환 타입으로 사용할 수도 있다.
 
+상태나 조건에 따라 달라질 수 있는 로직이 있을 때 이는 유용하게 쓰일 수 있다.
 
+### inline 함수
+
+코틀린은 고차 함수를 컴파일 할 때 익명 객체를 매번 생성하도록 되어 있기 때문에 이는 성능을 떨어뜨릴 수 있다.
+
+어떤 함수를 inline으로 선언하면 그 함수를 호출할 때 함수 본문을 번역한 바이트 코드로 컴파일 된다.
+
+### 흐름 제어
+
+```kotlin
+fun findZero(numList:List<Int>){
+    numList.forEach { 
+        if(it==0){
+            println("find zero")
+            return
+        }
+        println("cannot find zero")
+    }
+}
+```
+
+람다 안에서 return을 사용하면 그 람다를 호출하는 함수도 실행을 끝내고 반환된다.
+
+자신을 둘러싼 블록보다 더 바깥 블록을 반환하게 만드는 return 문을 넌 로컬 return이라고 부른다.
+
+return이 바깥쪽 함수를 반환시킬 수 있을 때는 람다를 인자로 받는 함수가 인라인 함수인 경우 뿐이다.
 
 ---
 
