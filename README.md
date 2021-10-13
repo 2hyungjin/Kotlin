@@ -1899,9 +1899,22 @@ fun someFun(n: Int): (num: Int) -> Int {}
 
 ### inline 함수
 
+```kotlin
+inline fun someMethod(noinline f:()->Unit){
+    someMethod2(f)
+}
+fun someMethod2(f:()->Unit){
+
+}
+```
+
 코틀린은 고차 함수를 컴파일 할 때 익명 객체를 매번 생성하도록 되어 있기 때문에 이는 성능을 떨어뜨릴 수 있다.
 
 어떤 함수를 inline으로 선언하면 그 함수를 호출할 때 함수 본문을 번역한 바이트 코드로 컴파일 된다.
+
+inline함수는 코드를 내부적으로 복사하기 때문에 코드가 길어지면 비효율적일 수 있으며, 전달받은 함수를 다른 함수로 전달할 수 없다,
+
+inline함수에서 제외할 파라미터에 noinline 키워드를 사용하여 inline 함수가 아님을 선언하면 이 함수는 다른 함수로 전달할 수 있다.
 
 ### 흐름 제어
 

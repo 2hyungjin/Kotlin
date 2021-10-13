@@ -10,7 +10,6 @@ val mul: ((Int, Int) -> Int)? = { x: Int, y: Int -> x * y }
 fun calculateOneAndTwo(operation: (Int, Int) -> Int = { x, y -> x * y }) {
     println(operation(1, 2))
 }
-
 fun findZero(numList:List<Int>){
     numList.forEach {
         if(it==0){
