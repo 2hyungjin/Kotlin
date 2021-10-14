@@ -1936,6 +1936,149 @@ fun findZero(numList:List<Int>){
 
 return이 바깥쪽 함수를 반환시킬 수 있을 때는 람다를 인자로 받는 함수가 인라인 함수인 경우 뿐이다.
 
+```kotlin
+fun findOne(numList:List<Int>){
+    numList.forEach lable@{
+        if(it==1){
+            println("find one")
+            return@lable
+        }
+        println("cannot find one")
+    }
+}
+```
+
+람다 식에서도 레이블을 사용하여 로컬 return을 사용할 수 있다.
+
+### 무명 함수
+
+```kotlin
+fun findTwo(numList: List<Int>) {
+    numList.forEach ( fun(num) {
+            if (num == 2) {
+                println("find two")
+                return
+            }
+            println("cannot find two")
+        })
+```
+
+무명 함수는 함수 이름이나 파라미터 타입을 생략한 함수이다.
+
+무명 함수에서의 return은 가장 가까운 무명 함수를 벗어나므로 local return이다.
+
+## 제네릭
+
+### 타입 파라미터
+
+```kotlin
+val stringList: List<String> = listOf<String>() //List<T>
+val map: Map<Int, String> = mapOf<Int, String>() //Map<K,V>
+```
+
+제네릭스를 사용하면 타입 파라미터를 받는 타입을 정의할 수 있다.
+
+제네릭 타입의 인스턴스를 만들기 위해서는 타입 파라미터를 구체적인 타입 인자로 치환해야 한다.
+
+```kotlin
+val stringList: List<String> = listOf<String>()
+val stringList2 = listOf<String>()
+val stringList3 = listOf("aaa","bbb")
+val stringList4:List<String> = listOf()
+```
+
+코틀린 컴파일러는 타입 파라미터를 추론할 수 있다.
+
+### 제네릭 함수
+
+```kotlin
+fun <T> List<T>.printAll() {
+    for (i in this) {
+        println(i)
+    }
+}
+```
+
+함수 이름 앞에 타입 파라미터를 선언하여 제네릭 함수를 선언할 수 있다.
+
+```kotlin
+listOf<String>("aa", "bb", "cc").printAll()
+listOf("aa","bb").printAll()
+```
+
+제네릭 함수를 호출할 때에는 타입 인자를 명시적으로 지정해야하지만, 대부분 컴파일러가 추론할 수 있기에 그럴 필요 없다.
+
+```kotlin
+val <T> List<T>.penultimate: T
+    get() = this[size - 2]
+```
+
+제네릭 확장 프로퍼티를 선언할 수도 있다.
+
+### 제네릭 클래스
+
+```kotlin
+interface List<T>{
+    operator fun get(index:Int):T
+}
+class ArrayList<T>:List<T>{
+    override fun get(index: Int): T {
+        TODO("Not yet implemented")
+    }
+}
+class StringList:List<String>{
+    override fun get(index: Int): String {
+        TODO("Not yet implemented")
+    }
+}
+```
+
+제네릭 클래스를 만들 수 있다.
+
+제네릭 클래스를 확장하는 클래스는 기반 타입의 타입 인자를 정해야 한다.
+
+클래스가 자기 자신을 타입 인자로 사용할 수도 있다.
+
+### 타입 파라미터 제약
+
+```kotlin
+fun <T : Number> someMethod(num: T) {} //Number로 타입 인자를 제한했다.
+
+fun <T> ensureTrailingPeriod(seq:T){ //타입 인자의 제한을 두 개 이상 걸 때에는 이렇게 해야한다.
+  where T : CharSequence, T: Appendable{
+    if(!seq.endsWith('.'){
+      seq.append('.')
+    })
+  }
+}
+```
+
+타입 파라미터 제약은 타입 인자를 제한하는 기능이다.
+
+타입 파라미터에 제약을 걸면 제네릭 타입을 인스턴스화할 때 사용하는 타입 인자는 그 타입 혹은 하위 타입이어야 한다.
+
+### 널이 될 수 없는 타입으로 한정
+
+```kotlin
+fun <T:Any>someMethod(value:T){
+    println(value.toString())
+}
+```
+
+아무런 제한을 걸지 않은 타입 인자는 Any?를 제한으로 건 것과 같다.
+
+항상 널이 될 수 없는 타입만 타입 인자로 받기 위해서는 타입 파라미터를 제한해야 한다.
+
+### 제네릭의 동작
+
+제네릭은 타입 소거를 사용해 구현된다. 실행 시점에 제네릭 클래스의 인스턴스에 타입 인자 정보가 들어있지 않다.
+
+예를 들어 List<String>의 객체를 만들더라도 실행 시점에서 그 객체는 오직 List로만 볼 뿐, 어떤타입의 원소를 저장하는지 모른다는 것이다.
+
+지금 인자를 알 수 없는 제네릭 타입을 표현할 때 스타 프로젝션(*)을 쓴다.
+
+
+
 ---
 
 > 출처 : Kotlin In Action(드미트리 제메로프, 스베트라나 이사코바)
