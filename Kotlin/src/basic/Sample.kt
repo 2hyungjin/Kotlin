@@ -1,11 +1,20 @@
 package basic
 
-fun main() {
-    var a: String? = null
-    if (a.isNullOrBlank()) return
-    a.length
-
-    val array = Array<Int>(13) {
-        it
+interface Sample {
+    fun sample()
+}
+class SampleImpl : Sample{
+    override fun sample() {
+        println("sample")
     }
+    fun sampleMethod(){
+
+    }
+
+}
+
+fun main() {
+    val list= listOf<Int>(1,5,6,7,2,3)
+    println(list.sorted())
+    println(list.sortedDescending())
 }

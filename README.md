@@ -4,7 +4,10 @@
 
 밑의 내용은 이 책을 읽고 내가 이해하며 정리한 내용이며 더 자세한 내용은 책을 구입하여 읽어보시길 바랍니다.
 
-- 코틀린은 **간결하고 실용적**이며 **자바 코드와의 상호운용성**을 중시한다.
+---
+
+코틀린은 **간결하고 실용적**이며 **자바 코드와의 상호운용성**을 중시한다.
+
 - 코틀린은 **정적 타입 지정 언어**이다. 정적 타입 지정 언어의 장점은 다음과 같다.
   - **성능** : 실행 시점에서 어떤 메소드를 호출할지 알아내는 과정이 필요 없어 메소드 호출이 더 빠르다.
   - **신뢰성** : 컴파일러가 프로그램의 정확성을 검증하여 오류를 줄인다.
@@ -350,7 +353,7 @@ list.maxOrNull() //최댓값
 list.last() //마지막 값
 ```
 
-코틀린은 표준 자바 컬렉션을 활용하여 자바 코드와 상요작용하기 쉽게 한다.
+코틀린은 표준 자바 컬렉션을 활용하여 자바 코드와 상호작용하기 쉽게 한다.
 
 코틀린의 컬렉션은 자바 컬렉션과 똑같은 클래스이지만 코틀린에서는 더 많은 기능을 사용할 수 있다.
 
@@ -582,7 +585,7 @@ open class Student constructor(val id: Int, val name: String)
 class SecondGradeStudent(id: Int, name: String, major: String) : Student(id, name)
 ```
 
-클래스에 부모 클래스가 있다면 주 생성자에서 기반 클래스의 생성자를 호출해야 한다.
+클래스에 부모 클래스가 있다면 주 생성자에서 부모 클래스의 생성자를 호출해야 한다.
 
 부모 클래스를 초기화하기 위해 키반 클래스 이름 뒤에 생성자 인자를 넘긴다.
 
@@ -1034,7 +1037,7 @@ val createNewStudent = ::Student
 
 ### 람다 식을 활용한 컬렉션 API
 
-람다 식을 활용한 함수형 프로그램이 스타일을 사용하여 컬렉션을 편하게 다룰 수 있다.
+람다 식을 활용한 함수형 프로그래밍 스타일을 사용하여 컬렉션을 편하게 다룰 수 있다.
 
 #### filter
 
@@ -1312,7 +1315,7 @@ fun nullableStrLen(string: String?): Int = if (string != null) string.length els
 
 ```kotlin
 fun nullableStrLen(string: String?): Int? = string?.length
-//fun nullableStrLen(string: String?): Int? = if (string != null) string.length와 같다.
+//fun nullableStrLen(string: String?): Int? = if (string != null) string.length else null과 같다.
 ```
 
 ?. 연산자는 null 검사와 메소드 호출을 한 번의 연산으로 수행한다.
@@ -1323,7 +1326,7 @@ fun nullableStrLen(string: String?): Int? = string?.length
 
 ```kotlin
 fun nullableStrLen(string: String?): Int = string?.length ?: 0
-//fun nullableStrLen(string: String?): Int = if (string != null) string.length else 0와 같다.
+//fun nullableStrLen(string: String?): Int = if(if (string != null) string.length else null)!=null) string.length else 0와 같다.
 ```
 
 엘비스 연산자는 null 대신 사용할 디폴트 값을 지정할 때 편리하게 사용할 수 있다.
@@ -1948,7 +1951,7 @@ fun findOne(numList:List<Int>){
 }
 ```
 
-람다 식에서도 레이블을 사용하여 로컬 return을 사용할 수 있다.
+람다 식에서도 label을 사용하여 로컬 return을 사용할 수 있다.
 
 ### 무명 함수
 
@@ -2069,13 +2072,116 @@ fun <T:Any>someMethod(value:T){
 
 항상 널이 될 수 없는 타입만 타입 인자로 받기 위해서는 타입 파라미터를 제한해야 한다.
 
-### 제네릭의 동작
+### 제네릭의 타입 소거
+
+```kotlin
+fun checkIsList(value:Any){
+    println(value is List<*>)
+}
+```
 
 제네릭은 타입 소거를 사용해 구현된다. 실행 시점에 제네릭 클래스의 인스턴스에 타입 인자 정보가 들어있지 않다.
 
+이는 저장해야 하는 타입 정보의 크기를 줄여 메모리 사용이 줄어든다는 장점이 있지만 실행 시점에서 타입 인자를 알 수 없다는 문제점이 생긴다.
+
 예를 들어 List<String>의 객체를 만들더라도 실행 시점에서 그 객체는 오직 List로만 볼 뿐, 어떤타입의 원소를 저장하는지 모른다는 것이다.
 
-지금 인자를 알 수 없는 제네릭 타입을 표현할 때 스타 프로젝션(*)을 쓴다.
+제네릭을 사용할 때 꼭 타입 인자를 명시해야하기 때문에 지금 인자를 알 수 없는 제네릭 타입을 표현할 때 스타 프로젝션(*)을 쓴다.
+
+```kotlin
+inline fun <reified T> someMethod(value: Any){
+    if (value is T){ }
+}
+```
+
+제네릭 함수가 호출되어도 그 함수의 본문에서는 호출 시에 쓰인 타입 인자를 알 수 없다.
+
+타입 인자를 본문에서 호출하기 위해서는 함수를 inline으로 선언하고 타입 인자에 reified를 사용하여야 한다.
+
+reified 키워드는 타입 인자가 실행 시점에서 지워지지 않음을 뜻하며 타입 파라미터를 실체화했다고 한다.
+
+실체화한 파라미터는
+
+- 타입 검사, 캐스팅(is, as)
+- 코틀린 리플렉션 API
+- 타입에 대응하는 java.lang.Class 얻기(::class.java)
+- 다른 함수를 호출할 때 인자로 사용
+
+은 가능하지만
+
+- 해당 타입 클래스의 인스턴스 생성
+- 해당 클래스의 동반 객체 메소드 호출
+- 실체화한 타입 파라미터를 요구하는 함수를 호출하면서 실체화하지 않은 타입 파라미터로 받은 타입을 넘기기
+- 인라인 함수가 아닌 함수의 타입 파라미터를 reified로 지정
+
+은 불가능하다.
+
+### 변성
+
+변성이란 기저 타입이 같고 타입 인자가 다른 여러 타입의 관계를 설명하는 개념이다.
+
+<Any>인 타입에 <String>을 넘길 수 있다. 하지만 이는 안전하다고 할 수 없다.
+
+#### 클래스, 타입, 하위 타입
+
+클래스와 타입은 다르다.
+
+하나의 String 클래스로, String과 String? 두 가지 타입이 만들어진다.
+
+제네릭 클래스의 경우 하나의 List 클래스로 List<Int>,List<String> 등 무수히 많은 타입을 만들 수 있다.
+
+타입 사이의 관계를 논하기 위해서는 상위, 하위 타입 개념을 이해해야 한다.
+
+```kotlin
+val number: Number
+val string: String
+number = 1 //right way
+string = 1 //wrong way
+```
+
+예를 들어 Int는 Number의 하위 타입이며 당연하게게도 Number는  Int의 상위 타입이다.
+
+어떤 값의 타입이 해당 변수의 하위 타입일 경우에만 변수에 대입할 수 있다.
+
+하위 타입은 근본적으로 하위 클래스와 같다.
+
+널이 될 수 없는 타입은 널이 될 수 있는 타입의 하위 타입이다. (하지만 같은 클래스이다.)
+
+#### 무공변
+
+제네릭에서 아무런 관계가 성립하지 않는 것을 무공변이라고 한다. 제네릭은 기본적으로 무공변적이다.
+
+#### 공변
+
+```kotlin
+open class Animal{}
+open class Bird:Animal(){}
+class Penguin:Bird(){}
+
+class Zoo<out T:Animal>(){
+    val animals= listOf<T>()
+    
+    fun getAnimal():T{
+        return animals[0]
+    } //right way
+  
+    fun setAnimal(animal: T){
+        
+    } //bad way
+}
+```
+
+제네릭에서 자신의 하위 타입까지 허용하는 것을 공변이라고 한다.
+
+공변적임을 표시하기 위해서 파라미터 이름 앞에 out을 붙인다.
+
+예시에서 Zoo는 Animal 타입에 대해 공변적이므로 Zoo<Animal>는 Zoo<Bird>의 상위 타입이라는 뜻이다.
+
+타입 인자가 공변적일 때 그 인자는 반환형으로만 사용 가능하다.
+
+#### 반공변
+
+반공변은 제네릭의 타입 인자의 연관성이 실제 타입의 반대가 되는 것이다.
 
 
 

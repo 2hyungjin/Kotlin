@@ -31,18 +31,26 @@ fun findOne(numList: List<Int>) {
     }
 }
 
+
 fun findTwo(numList: List<Int>) {
-    numList.forEach ( fun(num) {
-            if (num == 2) {
-                println("find two")
-                return
-            }
-            println("cannot find two")
-        })
+    numList.forEach(fun(num) {
+        if (num == 2) {
+            println("find two")
+            return
+        }
+        println("cannot find two")
+    })
 }
 
+fun checkIsList(value:Any){
+    println(value is List<*>)
+}
+
+inline fun <reified T> someMethod(value: Any){
+    if (value is T){}
+}
 fun main() {
 //    calculateOneAndTwo(add)
 //    calculateOneAndTwo { x, y -> x * y }
-    findZero(listOf(0,2,0,2,4))
+    findOne(listOf(1, 2, 1, 2, 4))
 }
