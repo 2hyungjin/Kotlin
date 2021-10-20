@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9bc39728-5766-44d7-b39c-0f8c4a96264e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/libraries/KotlinJavaRuntime.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/Kotlin.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/out/production/Kotlin/META-INF/Kotlin.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/annotation/Basic.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/Collection.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/Constructor.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/Exam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/ExtentionFunction.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/For&amp;While.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/HelloWorld.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/ObjectMethodExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/PropertyExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/Sample.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/basic/SmartCast.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/BasicRobot.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/Client.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/Robot.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/RobotDecorator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/RobotWithBoost.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/RobotWithFistDecorator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/decorator/RobotWithWingDecorator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/function/CustomSetterExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/function/InfixFunction.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/function/PersonCustomGetter.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/function/higherOrder/FunctionType.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/function/higherOrder/InlineFunction.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/generic/GenericClass.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/generic/GenericFunction.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/generic/TypeParameter.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/generic/Variance.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/LambdaBasic.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/LambdaWithCollection.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/SAMExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/SequenceExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/WithAndApply.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/lambda/aaa.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/AnonymousObjectExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/ConstructorExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/CountingSet.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/DataClassExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/InheritanceExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/InnerClassExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/InterfaceExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/ObjectExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/PersonEnumClass.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/obj/SealedClassExam.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/ArithmeticOperator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/CollectionOperator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/ComparisonOperator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/ComponentOperator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/LazyInitialization.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/overloading/LazyInitializationImpl.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/CastingNumber.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/Collection.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/JavaType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/LateInit.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/Let.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/Nothing.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kotlin/src/type/Nullable.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1zlCPTJmKdTHjhdMfwtzALrRJLb" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9bc39728-5766-44d7-b39c-0f8c4a96264e" name="Changes" comment="" />
+      <created>1634713263704</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1634713263704</updated>
+      <workItem from="1634713267298" duration="219000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
