@@ -2317,9 +2317,130 @@ DSL의 메소드 호출은  DSL문법에 의해 정해지는데 보통 람다를
 
 ## Coroutine
 
+```kotlin
+fun log(msg: String) = println("${java.lang.Thread.currentThread()} : $msg")
+fun launchGlobalScope() {
+    GlobalScope.launch {
+        log("coroutine is started")
+    }
+}
+
+fun main() {
+    log("main start")
+    launchGlobalScope()
+    log("function is executed")
+    Thread.sleep(5000L)
+    log("main terminate")
+}
+
+//Thread[main,5,main] : main start
+//Thread[main,5,main] : coroutine is started
+//Thread[main,5,main] : function is executed
+//Thread[main,5,main] : main terminate
+```
+
 코루틴은 실행을 주고 받으며 작동하는 여러 서브 루틴을 말한다.
 
+launch는 코루틴을 잡으로 반환하며, 만들어진 코루틴은 즉시 실행된다.
 
+launch가 반환한 Job의 cancel() 메소드를 호출하여 코루틴 실행을 중단시킬 수 있다.
+
+메인 함수와 코루틴은 서로 다른 스레드에서 실행된다.
+
+GlobalScope는 메인 스레드가 실행 중인 동안만 코루틴의 동작을 보장한다.
+
+### runBlocking
+
+```kotlin
+fun launchRunBlocking(){
+    runBlocking {
+        launch {
+            log("coroutine is started")
+        }
+    }
+}
+```
+
+runBlocking()은 코루틴의 실행이 끝날 때까지 현재 스레드를 블록시킨다.
+
+### yield
+
+```kotlin
+fun testYield(){
+    runBlocking {
+        launch {
+            log("1")
+            yield()
+            log("3")
+            yield()
+            log("5")
+        }
+        log("after first launch")
+        launch {
+            log("2")
+            delay(1000L)
+            log("4")
+            delay(1000L)
+            log("6")
+        }
+    }
+}
+//Thread[main,5,main] : 1
+//Thread[main,5,main] : 2
+//Thread[main,5,main] : 3
+//Thread[main,5,main] : 5
+//Thread[main,5,main] : 4
+//Thread[main,5,main] : 6
+
+```
+
+launch는 즉시 반환된다.
+
+runBlocking은 내부 코루틴이 모두 끝난 다음에 반환된다.
+
+delay()를 사용한 코루틴은 그 시간이 지날 때까지 다른 코루틴에게 실행을 양보한다.
+
+yield()는 현재 코루틴을 일시 정지하고 값을 반환한다.
+
+### async
+
+```kotlin
+fun testAsync() = runBlocking {
+    val def1 = async {
+        log("async start")
+        3
+    }
+    val def2 = async {
+        log("async2 start")
+        1
+    }
+    println(def1.await() + def2.await())
+}
+```
+
+async는 launch와 같은 역할을 하지만 Job이 아닌  Deffered를 반환한다.
+
+Deffered는  Job을 상속받고 타입 파라미터가 있으며 이는 Deffered 코루틴이 계산을 하고 돌려주는 값의 타입이다. 코루틴의 결과 값을 기다는 await()함수가 포함되어 있다.
+
+async와 launch 모두 CoroutineScope의 확장 함수이며  CoroutineScope에는 CoroutineContext 타입의 필드가 있다.
+
+CoroutineContext는 코루틴이 실행 중인 작업(Job)과 디스패처를 저장하는 일종의 맵이다.
+
+### Coroutine Builder & suspending function
+
+launch, async, runBlocking같은 함수들은 코루틴을 만들어주는 코루틴 빌더라고 한다.
+
+코루틴 빌더는 그 외에도 produce, actor 등이 있다.
+
+delay()와  yield()는 일시 중단 함수라고 부른다,
+
+일시 중단 함수에는 그 외에도 withContext. withTimeout. withTimeoutOrNull, awiltAll, joinAll 등이 있다.
+
+### suspend
+
+일시 중단 함수는 코루틴이나 다른 일시 중단 함수에서만 사용해야 한다.
+
+suspend 키워드를 사용하면 일반 함수도 일시 정지 함수로 만들 수 있다.
 
 ---
 
